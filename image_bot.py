@@ -10,7 +10,7 @@ EXNESS_LINK = "https://lisa01morris.github.io/amazon-deal-bot/"
 # --- 1. SETUP ASSETS ---
 def setup():
     # Download a cool background (Dark Trading Chart)
-    img_data = requests.get("https://images.unsplash.com/photo-1611974765270-ca1258634369?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80").content
+    img_data = requests.get("https://images.unsplash.com/photo-1642543492481-44e81e3914a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80").content
     with open("bg_card.jpg", "wb") as f:
         f.write(img_data)
     
@@ -21,21 +21,25 @@ def setup():
 
 # --- 2. DRAW THE CARD ---
 def create_card():
-    asset = random.choice(["GOLD (XAU)", "BITCOIN", "GBP/USD", "US30"])
+    asset = random.choice(["GOLD (XAU)", "BITCOIN", "GBP/USD", "US30", "NASDAQ"])
     action = random.choice(["STRONG BUY 🚀", "SELL NOW 📉"])
-    price = random.randint(1900, 65000)
     
     # Open image & darken it so text pops
     img = Image.open("bg_card.jpg").convert("RGBA")
-    overlay = Image.new('RGBA', img.size, (0, 0, 0, 150)) # Black tint
+    overlay = Image.new('RGBA', img.size, (0, 0, 0, 180)) # Darker tint
     img = Image.alpha_composite(img, overlay)
     
     draw = ImageDraw.Draw(img)
     
     # Load Fonts
-    font_lg = ImageFont.truetype("bold.ttf", 100)
-    font_md = ImageFont.truetype("bold.ttf", 60)
-    font_sm = ImageFont.truetype("bold.ttf", 40)
+    try:
+        font_lg = ImageFont.truetype("bold.ttf", 100)
+        font_md = ImageFont.truetype("bold.ttf", 60)
+        font_sm = ImageFont.truetype("bold.ttf", 40)
+    except:
+        font_lg = ImageFont.load_default()
+        font_md = ImageFont.load_default()
+        font_sm = ImageFont.load_default()
     
     # Draw Text (Centered)
     W, H = img.size
@@ -51,8 +55,8 @@ def create_card():
     draw.text((W/2, 800), action, font=font_lg, fill=color, anchor="mm")
     
     # Footer
-    draw.text((W/2, 1300), "Trade with 0 Spreads", font=font_sm, fill="white", anchor="mm")
-    draw.text((W/2, 1400), "LINK IN BIO", font=font_md, fill="#F3C623", anchor="mm")
+    draw.text((W/2, 1200), "Trade with 0 Spreads", font=font_sm, fill="white", anchor="mm")
+    draw.text((W/2, 1300), "LINK IN BIO", font=font_md, fill="#F3C623", anchor="mm")
     
     # Save
     img = img.convert("RGB")
@@ -62,8 +66,9 @@ def create_card():
 # --- 3. SEND TO DISCORD ---
 def send_discord(asset, action):
     with open("signal_card.jpg", "rb") as f:
+        caption = f"🚨 {asset} is moving! {action} \n\n👉 Trade here: {EXNESS_LINK}"
         payload = {
-            "content": f"**🚨 NEW SIGNAL CARD GENERATED!**\n\n**Strategy:** Post this to WhatsApp Status & Facebook Groups.\n**Caption:** {asset} is moving! {action} on Exness here: {EXNESS_LINK}"
+            "content": f"**🖼️ IMAGE READY!**\n\n1. Save the Image.\n2. Post to WhatsApp/Facebook.\n3. Caption:\n```\n{caption}\n```"
         }
         requests.post(WEBHOOK_URL, data=payload, files={"file": f})
 
