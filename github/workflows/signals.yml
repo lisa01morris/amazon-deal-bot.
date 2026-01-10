@@ -1,0 +1,23 @@
+name: 4x Daily Trading Signals
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Runs every 6 hours (4 times a day)
+  workflow_dispatch:      # Manual button
+
+jobs:
+  run-signals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install Dependencies
+        run: pip install google-generativeai requests
+      - name: Run Signal Bot
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: python signal_bot.py
