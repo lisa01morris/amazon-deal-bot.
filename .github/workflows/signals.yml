@@ -1,23 +1,29 @@
-name: Signal Bot
+name: Video Factory
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Runs every 6 hours
-  workflow_dispatch:      # Allows manual button click
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
 
 jobs:
-  run-signals:
+  make-video:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      
+      - name: Install System Tools (FFmpeg)
+        run: sudo apt-get install -y ffmpeg
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - name: Install Libraries
-        run: pip install google-generativeai requests
-      - name: Run Bot
+          
+      - name: Install Python Libraries
+        run: pip install -r requirements.txt
+        
+      - name: Run Video Bot
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        run: python signal_bot.py
+        run: python video_bot.py
