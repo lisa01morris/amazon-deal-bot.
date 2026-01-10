@@ -1,0 +1,5 @@
+google-generativeai
+requests
+moviepy
+edge-tts
+imageio-ffmpeg
