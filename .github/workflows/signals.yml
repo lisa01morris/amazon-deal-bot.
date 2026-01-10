@@ -1,4 +1,4 @@
-name: Video Factory
+name: Video & Image Factory
 
 on:
   schedule:
@@ -6,12 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  make-video:
+  make-content:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       
-      - name: Install System Tools (FFmpeg)
+      - name: Install System Tools
         run: sudo apt-get install -y ffmpeg
 
       - name: Set up Python
@@ -19,11 +19,14 @@ jobs:
         with:
           python-version: '3.9'
           
-      - name: Install Python Libraries
+      - name: Install Libraries
         run: pip install -r requirements.txt
         
-      - name: Run Video Bot
+      - name: Run Generators
         env:
-          GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        run: python video_bot.py
+          GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python video_bot.py
+          python image_bot.py
