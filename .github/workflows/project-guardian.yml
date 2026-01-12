@@ -1,0 +1,21 @@
+name: Project Guardian
+
+on: [push]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required files
+        run: |
+          echo "🔍 Checking project state..."
+          test -f NEXT_STEPS.md || echo "❌ Missing NEXT_STEPS.md"
+          test -f README.md || echo "❌ Missing README.md"
+          test -f .env.example || echo "❌ Missing .env.example"
+
+      - name: Reminder
+        run: |
+          echo "🧭 NEXT STEP:"
+          echo "→ Open NEXT_STEPS.md and do the FIRST task."
