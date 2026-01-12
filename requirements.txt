@@ -1,6 +1,7 @@
 google-generativeai
 requests
-moviepy
+moviepy==1.0.3
 edge-tts
 imageio-ffmpeg
 Pillow
+decorator==4.4.2
