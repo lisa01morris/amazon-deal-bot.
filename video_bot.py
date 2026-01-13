@@ -13,8 +13,7 @@ WEBHOOK_URL = os.environ["DISCORD_WEBHOOK"]
 EXNESS_LINK = "https://lisa01morris.github.io/amazon-deal-bot/"
 
 genai.configure(api_key=GEMINI_KEY)
-model = genai.GenerativeModel('gemini-pro')
-
+model = genai.GenerativeModel('gemini-1.5-flash')
 # --- 1. GET THE SCRIPT ---
 def get_script():
     asset = random.choice(["Bitcoin", "Gold", "USD/JPY", "Tesla", "XRP"])
